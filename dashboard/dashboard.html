@@ -1190,6 +1190,19 @@ function switchTab(tabName) {
     document.getElementById(`tab-${tabName}`).classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
+    // Исправление ширины treemap при переключении на вкладку "Дашборд"
+    if (tabName === 'dashboard') {
+        // Даём время браузеру отобразить вкладку, затем пересчитываем размеры графиков
+        setTimeout(() => {
+            if (document.getElementById('treemap')) {
+                Plotly.Plots.resize('treemap');
+            }
+            if (document.getElementById('critical-treemap')) {
+                Plotly.Plots.resize('critical-treemap');
+            }
+        }, 100);
+    }
+
     console.log(`📑 Переключено на вкладку: ${tabName}`);
 }
 
@@ -1496,12 +1509,17 @@ function renderTreemap(data) {
     // Принудительный resize для корректного распределения по ширине при загрузке
     setTimeout(() => {
         Plotly.Plots.resize('treemap');
-    }, 200);
+    }, 300);
 
-    // Дополнительный resize через 500ms для гарантии корректной отрисовки
+    // Дополнительный resize для гарантии корректной отрисовки
     setTimeout(() => {
         Plotly.Plots.resize('treemap');
-    }, 500);
+    }, 800);
+
+    // Финальный resize через большую задержку для полной загрузки
+    setTimeout(() => {
+        Plotly.Plots.resize('treemap');
+    }, 1500);
 
     // Drill-down обработчик
     document.getElementById('treemap').on('plotly_click', function(eventData) {
