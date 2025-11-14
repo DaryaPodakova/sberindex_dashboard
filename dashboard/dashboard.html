@@ -1023,7 +1023,7 @@
 <section class="vis-section">
     <div class="panel-title">
         <span class="icon">🚨</span>
-        ТОП-15 НП В КРИТИЧЕСКОЙ ЗОНЕ (NDI < 3.0)
+        НАСЕЛЁННЫЕ ПУНКТЫ В КРИТИЧЕСКОЙ ЗОНЕ (NDI < 3.0)
     </div>
 
     <div class="table-container">
@@ -1689,8 +1689,7 @@ updateResetAllButton();
 function renderCriticalSettlements() {
     // Фильтруем НП с NDI < 3.0
     const critical = arcticData.filter(d => d.ndi_10 < 3.0)
-        .sort((a, b) => a.ndi_10 - b.ndi_10)
-        .slice(0, 15);
+        .sort((a, b) => a.ndi_10 - b.ndi_10);
 
     const tbody = document.getElementById('criticalTableBody');
     tbody.innerHTML = '';
