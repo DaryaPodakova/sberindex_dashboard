@@ -571,6 +571,22 @@
             border-left-color: #388e3c;
         }
 
+        .kpi-card.critical:hover {
+            background: rgba(211, 47, 47, 0.05);
+        }
+
+        .kpi-card.low:hover {
+            background: rgba(245, 124, 0, 0.05);
+        }
+
+        .kpi-card.medium:hover {
+            background: rgba(251, 192, 45, 0.05);
+        }
+
+        .kpi-card.high:hover {
+            background: rgba(56, 142, 60, 0.05);
+        }
+
         .kpi-label {
             font-size: 14px;
             color: #7f8c8d;
@@ -582,6 +598,13 @@
             font-size: 48px;
             font-weight: bold;
             margin: 10px 0;
+        }
+
+        .kpi-percent {
+            font-size: 24px;
+            font-weight: normal;
+            opacity: 0.6;
+            margin-left: 8px;
         }
 
         .kpi-description {
@@ -1256,7 +1279,7 @@ function applyFilters(category) {
         const total = filtered.length;
         const count = counts[cat] || 0;
         const percent = total > 0 ? Math.round((count / total) * 100) : 0;
-        if (valueEl) valueEl.textContent = `${count} (${percent}%)`;
+        if (valueEl) valueEl.innerHTML = `${count}<span class="kpi-percent">(${percent}%)</span>`;
     });
 
     // Обновляем кнопку "Сбросить все"
