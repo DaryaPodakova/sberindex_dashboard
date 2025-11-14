@@ -841,15 +841,15 @@
 </header>
 
 <nav class="tabs-navigation">
-    <button class="tab-btn active" onclick="switchTab('story')">
+    <button type="button" class="tab-btn active" onclick="switchTab('story')">
         <span class="tab-icon">📖</span>
         <span>История</span>
     </button>
-    <button class="tab-btn" onclick="switchTab('dashboard')">
+    <button type="button" class="tab-btn" onclick="switchTab('dashboard')">
         <span class="tab-icon">📊</span>
         <span>Дашборд</span>
     </button>
-    <button class="tab-btn" onclick="switchTab('methodology')">
+    <button type="button" class="tab-btn" onclick="switchTab('methodology')">
         <span class="tab-icon">🔬</span>
         <span>Методология</span>
     </button>
@@ -914,7 +914,7 @@
 </section>
 
 <div class="section-nav">
-    <button class="nav-btn" onclick="switchTab('dashboard')">Перейти к дашборду →</button>
+    <button type="button" class="nav-btn" onclick="switchTab('dashboard')">Перейти к дашборду →</button>
 </div>
 
 </div>
@@ -934,10 +934,10 @@
 
     <div class="control-panel">
         <div class="filter-group">
-            <label>Регион</label>
+            <label id="region-filter-label">Регион</label>
             <div class="multi-select-wrapper" id="region-filter-wrapper">
                 <div class="filter-button-group">
-                    <button type="button" class="multi-select-button" id="region-filter-button">
+                    <button type="button" class="multi-select-button" id="region-filter-button" aria-labelledby="region-filter-label">
                         Все регионы ▼
                     </button>
                     <button type="button" class="btn-reset" id="region-filter-reset" title="Сбросить фильтр регионов">×</button>
@@ -958,10 +958,10 @@
         </div>
 
         <div class="filter-group">
-            <label>Населённый пункт</label>
+            <label id="settlement-filter-label">Населённый пункт</label>
             <div class="multi-select-wrapper" id="settlement-filter-wrapper">
                 <div class="filter-button-group">
-                    <button type="button" class="multi-select-button" id="settlement-filter-button">
+                    <button type="button" class="multi-select-button" id="settlement-filter-button" aria-labelledby="settlement-filter-label">
                         Все НП ▼
                     </button>
                     <button type="button" class="btn-reset" id="settlement-filter-reset" title="Сбросить фильтр населённых пунктов">×</button>
@@ -972,7 +972,7 @@
         </div>
 
         <div class="filter-group">
-            <label>Уровень привлекательности</label>
+            <label for="filter-category">Уровень привлекательности</label>
             <select id="filter-category">
                 <option value="">Все уровни</option>
                 <option value="Критический">❌ Критический (NDI < 3.0)</option>
@@ -983,7 +983,7 @@
         </div>
 
         <div class="filter-group">
-            <label>Арктическая зона</label>
+            <label for="filter-arctic">Арктическая зона</label>
             <select id="filter-arctic">
                 <option value="">Все</option>
                 <option value="true">Да (арктические)</option>
@@ -1050,7 +1050,7 @@
 <section class="vis-section">
     <div class="vis-title">
         🗺️ Карта привлекательности НП по регионам
-        <button id="treemap-back-btn" style="display:none; margin-left: 20px; padding: 5px 15px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        <button type="button" id="treemap-back-btn" style="display:none; margin-left: 20px; padding: 5px 15px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">
             ← Назад к регионам
         </button>
     </div>
@@ -1061,8 +1061,8 @@
      будет добавлена позже. Восстановление: см. git history или connected_arctic_dashboard (1).html -->
 
 <div class="section-nav">
-    <button class="nav-btn" onclick="switchTab('story')">← К истории</button>
-    <button class="nav-btn" onclick="switchTab('methodology')">К методологии →</button>
+    <button type="button" class="nav-btn" onclick="switchTab('story')">← К истории</button>
+    <button type="button" class="nav-btn" onclick="switchTab('methodology')">К методологии →</button>
 </div>
 
 </div>
@@ -1139,13 +1139,13 @@
     <h2 class="cta-title">Готовы использовать ARCTIC INDEX?</h2>
     <p class="cta-subtitle">Присоединяйтесь к проекту открытых данных для Арктики</p>
     <div class="cta-buttons">
-        <button class="cta-btn primary" onclick="alert('Контакт: arctic.index@example.com')">Связаться с нами</button>
-        <button class="cta-btn secondary" onclick="alert('GitHub: github.com/arctic-index')">Посмотреть код</button>
+        <button type="button" class="cta-btn primary" onclick="alert('Контакт: arctic.index@example.com')">Связаться с нами</button>
+        <button type="button" class="cta-btn secondary" onclick="alert('GitHub: github.com/arctic-index')">Посмотреть код</button>
     </div>
 </section>
 
 <div class="section-nav">
-    <button class="nav-btn" onclick="switchTab('dashboard')">← К дашборду</button>
+    <button type="button" class="nav-btn" onclick="switchTab('dashboard')">← К дашборду</button>
 </div>
 
 </div>
