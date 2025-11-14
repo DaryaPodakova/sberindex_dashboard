@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARCTIC INDEX - Индекс развития арктических НП</title>
     <script src="https://cdn.plot.ly/plotly-3.1.1.min.js"></script>
+    <script src="ndi_widget.js"></script>
+    <script src="arctic_table.js"></script>
     <style>
         * {
             margin: 0;
@@ -802,7 +804,7 @@
 
         /* Critical Settlements Widget Styles */
         .panel-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             margin-bottom: 16px;
             color: #2c3e50;
@@ -811,25 +813,27 @@
         }
 
         .panel-title .icon {
-            font-size: 24px;
+            font-size: 20px;
             margin-right: 10px;
         }
 
         .priority-table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 12px;
         }
 
         .priority-table th {
             background: #34495e;
             color: white;
-            padding: 12px;
+            padding: 8px 10px;
             text-align: left;
             font-weight: 600;
+            font-size: 11px;
         }
 
         .priority-table td {
-            padding: 10px 12px;
+            padding: 6px 8px;
             border-bottom: 1px solid #ecf0f1;
         }
 
@@ -854,6 +858,261 @@
             overflow-y: auto;
             max-height: 320px;
         }
+
+        /* ============================================================================ */
+        /* NDI WIDGET STYLES - Декомпозиция NDI и сравнение компонентов */
+        /* ============================================================================ */
+        .ndi-widget-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: box-shadow 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .ndi-widget-panel:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+
+        .ndi-widget-panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+        }
+
+        .ndi-widget-panel-title .icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .ndi-widget-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #34495e;
+            text-transform: uppercase;
+        }
+
+        .control-group select {
+            padding: 8px 12px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .control-group select:hover {
+            border-color: #3498db;
+        }
+
+        .control-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .control-group input[type="text"] {
+            padding: 8px 12px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: white;
+            transition: border-color 0.3s;
+        }
+
+        .control-group input[type="text"]:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .ndi-widget-filter-group {
+            display: flex;
+            gap: 1%;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .ndi-widget-filter-group .control-group {
+            flex: 0 0 18%;
+            min-width: 150px;
+        }
+
+        .ndi-widget-filter-group .control-group:nth-child(2) {
+            flex: 0 0 28%;
+            min-width: 200px;
+        }
+
+        .ndi-widget-reset-btn {
+            padding: 8px 14px;
+            border: 2px solid #bdc3c7;
+            border-radius: 6px;
+            background: white;
+            color: #7f8c8d;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ndi-widget-reset-btn:hover {
+            background: #ecf0f1;
+        }
+
+        .ndi-widget-reset-btn.active {
+            border-color: #3498db;
+            color: #3498db;
+            background: #f0f8ff;
+        }
+
+        .ndi-widget-reset-all-btn {
+            padding: 8px 16px;
+            border: 2px solid #bdc3c7;
+            border-radius: 6px;
+            background: white;
+            color: #7f8c8d;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .ndi-widget-reset-all-btn:hover {
+            background: #ecf0f1;
+        }
+
+        .ndi-widget-reset-all-btn.active {
+            border-color: #3498db;
+            background: #3498db;
+            color: white;
+        }
+
+        .ndi-widget-reset-all-btn.active:hover {
+            background: #2980b9;
+            border-color: #2980b9;
+        }
+
+        .ndi-widget-reset-btn.active:hover {
+            background: #e1f0ff;
+        }
+
+        .ndi-widget-charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .ndi-widget-chart-container {
+            background: #fafbfc;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (max-width: 1200px) {
+            .ndi-widget-charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .ndi-widget-info-box {
+            background: #f0f8ff;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .ndi-widget-info-box p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+
+        /* ============================================================================ */
+        /* ARCTIC TABLE STYLES - Таблица населённых пунктов */
+        /* ============================================================================ */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 16px;
+            color: #7f8c8d;
+        }
+
+        .error {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #e74c3c;
+            font-size: 16px;
+        }
+
+        .sort-icon {
+            font-size: 10px;
+            opacity: 0.5;
+            margin-left: 4px;
+        }
+
+        .priority-table th[data-sort] {
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .priority-table th[data-sort]:hover {
+            background: #415b76;
+        }
+
+        .score-cell {
+            text-align: center;
+        }
+
+        .badge {
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge-arctic {
+            background: #3498db;
+            color: white;
+        }
+
+        .temp-cold {
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .temp-hot {
+            color: #e74c3c;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -866,7 +1125,7 @@
 <nav class="tabs-navigation">
     <button type="button" class="tab-btn active" onclick="switchTab('story')">
         <span class="tab-icon">📖</span>
-        <span>История</span>
+        <span>Вступление</span>
     </button>
     <button type="button" class="tab-btn" onclick="switchTab('dashboard')">
         <span class="tab-icon">📊</span>
@@ -878,61 +1137,59 @@
     </button>
 </nav>
 
-<!-- ВКЛАДКА 1: ИСТОРИЯ -->
+<!-- ВКЛАДКА 1: ВСТУПЛЕНИЕ -->
 <div id="tab-story" class="tab-content active">
 
 <section class="intro-section">
-    <h2>АРКТИКА В ЦИФРАХ: 40 НП в зоне риска оттока населения</h2>
+    <h2>АРКТИКА: ТЕРРИТОРИЯ КОНТРАСТОВ</h2>
     <div class="intro-stats">
+        <div class="stat">
+            <span class="stat-number">650k+</span>
+            <span class="stat-label">Жителей</span>
+        </div>
         <div class="stat">
             <span class="stat-number">128</span>
             <span class="stat-label">Населённых пунктов</span>
         </div>
         <div class="stat">
-            <span class="stat-number">200k</span>
-            <span class="stat-label">Жителей</span>
-        </div>
-        <div class="stat">
-            <span class="stat-number">6</span>
-            <span class="stat-label">Компонентов NDI</span>
+            <span class="stat-number">60%</span>
+            <span class="stat-label">На критическом уровне</span>
         </div>
     </div>
-    <p class="intro-text">Первый инструмент для адресной государственной поддержки арктических территорий на основе данных</p>
-    <p class="intro-sources">Источники: Росстат (93 показателя ПОРА), СберИндекс (2024), Open-Meteo</p>
 </section>
 
 <section class="story-hero-section">
     <div class="story-container">
-        <div class="story-hero">
-            <div class="story-hero-icon">🏆</div>
-            <div class="story-hero-badge">#1 в России</div>
+        <div class="story-text" style="max-width: 900px; margin: 0 auto; line-height: 1.8;">
+            <p style="font-size: 18px; margin-bottom: 20px;">
+                В Арктике живут более <strong>650 тысяч человек</strong> в <strong>128 населённых пунктах</strong>.
+                Созданный мной индекс <strong style="color: #2196F3;">NDI</strong> позволяет увидеть, насколько эти поселения устойчивы и привлекательны для людей, живущих в одном из самых суровых климатов планеты.
+            </p>
+
+            <p style="font-size: 18px; margin-bottom: 20px;">
+                Сегодня <strong style="color: #f44336;">60% населённых пунктов</strong> находятся на критическом или низком уровне развития.
+                <strong style="color: #2196F3;">NDI</strong> даёт возможность увидеть картину сразу на двух масштабах:
+            </p>
+
+            <ul style="font-size: 18px; margin: 20px 0; padding-left: 40px;">
+                <li style="margin-bottom: 10px;">общую ситуацию по региону,</li>
+                <li>и средний уровень развития каждого конкретного населённого пункта.</li>
+            </ul>
+
+            <p style="font-size: 18px; margin-bottom: 20px;">
+                На второй вкладке дашборда можно увидеть <strong>региональные различия</strong>,
+                а на вкладке <strong>Методика</strong> — полный разбор формулы и вычислений, чтобы любой специалист мог воспроизвести или улучшить мой расчёт.
+            </p>
+
+            <p style="font-size: 18px; margin-bottom: 30px;">
+                Именно благодаря данным <strong>Росстата</strong>, <strong>СберИндекса</strong> и <strong>Open-Meteo</strong> удалось построить инструмент, который показывает, что удерживает людей в Арктике,
+                и почему одни территории выживают и развиваются, а другие — стремительно теряют население.
+            </p>
+
+            <p style="font-size: 20px; font-style: italic; color: #6c757d; text-align: center; margin: 40px 0; padding: 30px; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #2196F3;">
+                «А теперь посмотрим, где в нашей суровой Арктике можно не только жить, но и хоть немного погреться...»
+            </p>
         </div>
-
-        <div class="story-text">
-            <h2>История пгт Надвоицы: как Карелия обогнала нефтяников</h2>
-            <p class="lead">12 тысяч человек. Посёлок городского типа в 350 км от Петрозаводска. <strong>NDI 7.09/10</strong> — лучший результат среди 128 арктических населённых пунктов.</p>
-
-            <p><strong>Секрет успеха?</strong> Не богатство (потребление 26k руб/мес — скромнее, чем у нефтяников ЯНАО). Не климат (HDD 6800 — холодно, но терпимо). Ключ — <span class="highlight-blue">market_access = 1.0</span> (100% доступность рынков) и <span class="highlight-green">POAD = 0.65</span> (качество жизни выше среднего).</p>
-
-            <p class="insight-quote">"Надвоицы — это живой пример того, как <strong>география + инфраструктура</strong> компенсируют удалённость. Хорошие дороги до Петрозаводска, работающий целлюлозно-бумажный комбинат, развитая социальная сфера. Люди не уезжают — они <strong>возвращаются</strong>."</p>
-        </div>
-    </div>
-
-    <div class="story-contrast">
-        <h3>А теперь взгляните на противоположность...</h3>
-        <div class="contrast-grid">
-            <div class="contrast-card good">
-                <strong>пгт Надвоицы (Карелия)</strong><br>
-                NDI: 7.09 | Население: 12k | Тренд: стабильно<br>
-                <span style="font-size: 12px; color: #2e7d32;">✓ Market access: 100% | ✓ POAD: 65% | ✓ Climate: приемлемо</span>
-            </div>
-            <div class="contrast-card bad">
-                <strong>пгт Депутатский (Якутия)</strong><br>
-                NDI: 1.51 | Население: 2k → 1.5k (-25% за 5 лет) | Тренд: вымирание<br>
-                <span style="font-size: 12px; color: #c62828;">✗ Accessibility: 18% | ✗ Climate: HDD > 10500 | ✗ POAD: критично</span>
-            </div>
-        </div>
-        <p class="story-question"><strong>Вопрос к жюри:</strong> Сколько "Депутатских" мы можем спасти, если будем знать, <em>где</em> и <em>как</em> помогать?</p>
     </div>
 </section>
 
@@ -941,7 +1198,7 @@
 </div>
 
 </div>
-<!-- КОНЕЦ ВКЛАДКИ 1: ИСТОРИЯ -->
+<!-- КОНЕЦ ВКЛАДКИ 1: ВСТУПЛЕНИЕ -->
 
 <!-- ВКЛАДКА 2: ДАШБОРД -->
 <div id="tab-dashboard" class="tab-content">
@@ -1004,15 +1261,6 @@
                 <option value="Высокий">🟢 Высокий (NDI ≥ 6.5)</option>
             </select>
         </div>
-
-        <div class="filter-group">
-            <label for="filter-arctic">Арктическая зона</label>
-            <select id="filter-arctic">
-                <option value="">Все</option>
-                <option value="true">Да (арктические)</option>
-                <option value="false">Нет (неарктические)</option>
-            </select>
-        </div>
     </div>
 </section>
 
@@ -1042,37 +1290,11 @@
     </div>
 </section>
 
-<!-- CRITICAL SETTLEMENTS -->
-<section class="vis-section">
-    <div class="panel-title">
-        <span class="icon">🚨</span>
-        НАСЕЛЁННЫЕ ПУНКТЫ В КРИТИЧЕСКОЙ ЗОНЕ (NDI < 3.0)
-    </div>
-
-    <div class="table-container">
-        <table class="priority-table" id="criticalTable">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Населённый пункт</th>
-                    <th>NDI</th>
-                    <th>Регион</th>
-                    <th>Статус</th>
-                </tr>
-            </thead>
-            <tbody id="criticalTableBody">
-                <!-- Будет заполнено JavaScript -->
-            </tbody>
-        </table>
-    </div>
-
-    <div id="critical-treemap" style="height: 280px; margin-top: 20px;"></div>
-</section>
-
 <!-- TREEMAP -->
 <section class="vis-section">
     <div class="vis-title">
         🗺️ Карта привлекательности НП по регионам
+        <span style="color: #6c757d; font-size: 14px; font-weight: normal; margin-left: 10px;">(*провалиться в НП можно по клику в регион)</span>
         <button type="button" id="treemap-back-btn" style="display:none; margin-left: 20px; padding: 5px 15px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">
             ← Назад к регионам
         </button>
@@ -1080,8 +1302,147 @@
     <div id="treemap" style="height: 550px;"></div>
 </section>
 
-<!-- TODO: Секция "📊 Декомпозиция NDI и сравнение компонентов" (waterfall/radar)
-     будет добавлена позже. Восстановление: см. git history или connected_arctic_dashboard (1).html -->
+<!-- ============================================================================ -->
+<!-- NDI DECOMPOSITION WIDGET - Декомпозиция NDI и сравнение компонентов -->
+<!-- ============================================================================ -->
+<section class="vis-section">
+<div class="ndi-widget-panel">
+    <div class="ndi-widget-panel-title">
+        <span class="icon">📊</span>
+        Декомпозиция NDI и сравнение компонентов
+    </div>
+
+    <div class="ndi-widget-info-box">
+        <p><strong>Waterfall:</strong> Показывает вклад каждого компонента в итоговый индекс NDI выбранного НП относительно среднего значения либо по всем НП либо региона.</p>
+        <p><strong>Radar:</strong> Сравнивает профиль компонентов между средними.</p>
+    </div>
+
+    <div class="filters-header">
+        <h4 style="color: #6c757d;">Фильтры</h4>
+        <button type="button" class="btn-reset-all" id="reset-all-filters">
+            🔄 Сбросить все
+        </button>
+    </div>
+
+    <div class="ndi-widget-controls">
+        <div class="ndi-widget-filter-group">
+            <div class="control-group">
+                <label for="settlement-search">Поиск НП:</label>
+                <input type="text" id="settlement-search" placeholder="Начните вводить название...">
+            </div>
+            <div class="control-group">
+                <label for="settlement-select">Выберите НП для декомпозиции:</label>
+                <select id="settlement-select">
+                    <option value="average">Все НП (среднее)</option>
+                    <!-- Будет заполнено из JavaScript -->
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="compare-mode">Режим сравнения:</label>
+                <select id="compare-mode">
+                    <option value="vs-russia">vs Среднее по РФ</option>
+                    <option value="vs-region">vs Среднее по региону</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="region-filter">Регион:</label>
+                <select id="region-filter">
+                    <option value="all">Все регионы</option>
+                    <!-- Будет заполнено из JavaScript -->
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="ndi-widget-charts-grid">
+        <div class="ndi-widget-chart-container">
+            <div id="waterfall" style="height: 450px;"></div>
+        </div>
+        <div class="ndi-widget-chart-container">
+            <div id="radar" style="height: 450px;"></div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- ============================================================================ -->
+<!-- ТАБЛИЦА ВСЕХ НАСЕЛЁННЫХ ПУНКТОВ АРКТИЧЕСКОЙ ЗОНЫ -->
+<!-- ============================================================================ -->
+<section class="vis-section">
+    <div class="panel">
+        <div class="panel-title">
+            <span class="icon">📊</span>
+            НАСЕЛЁННЫЕ ПУНКТЫ АРКТИЧЕСКОЙ ЗОНЫ
+        </div>
+
+        <div id="loading-table" class="loading">Загрузка данных...</div>
+        <div id="error-table" class="error"></div>
+
+        <div id="tableWrapper" style="display: none;">
+            <!-- Фильтры над таблицей -->
+            <div class="filters-header">
+                <h4 style="color: #6c757d;">Фильтры таблицы</h4>
+                <button type="button" class="btn-reset-all" id="table-reset-all-filters">
+                    🔄 Сбросить все
+                </button>
+            </div>
+            <div class="ndi-widget-controls" style="margin-bottom: 20px;">
+                <div class="ndi-widget-filter-group">
+                    <div class="control-group">
+                        <label for="table-search">Поиск НП:</label>
+                        <input type="text" id="table-search" placeholder="Начните вводить название...">
+                    </div>
+                    <div class="control-group">
+                        <label for="table-settlement-select">Выберите НП для декомпозиции:</label>
+                        <select id="table-settlement-select">
+                            <option value="average">Все НП (среднее)</option>
+                            <!-- Будет заполнено из JavaScript -->
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="table-region-filter">Регион:</label>
+                        <select id="table-region-filter">
+                            <option value="all">Все регионы</option>
+                            <!-- Будет заполнено из JavaScript -->
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="arctic-filter">Арктическая зона:</label>
+                        <select id="arctic-filter">
+                            <option value="all">Все НП</option>
+                            <option value="yes">Только арктические</option>
+                            <option value="no">Только не арктические</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="priority-table" id="arcticTable">
+                    <thead>
+                        <tr>
+                            <th>№</th>
+                            <th data-sort="settlement_name">Населённый пункт <span class="sort-icon">⇅</span></th>
+                            <th data-sort="is_arctic">Арктика <span class="sort-icon">⇅</span></th>
+                            <th data-sort="ndi_10">NDI<br>(0-10) <span class="sort-icon">⇅</span></th>
+                            <th data-sort="poad_score_100">Качество<br>жизни <span class="sort-icon">⇅</span></th>
+                            <th data-sort="market_score_100">Доступность<br>рынков <span class="sort-icon">⇅</span></th>
+                            <th data-sort="consumption_score_100">Потребление <span class="sort-icon">⇅</span></th>
+                            <th data-sort="accessibility_score_100">Доступность<br>инфраструктуры <span class="sort-icon">⇅</span></th>
+                            <th data-sort="climate_score_100">Климат <span class="sort-icon">⇅</span></th>
+                            <th data-sort="mobility_score_100">Мобильность <span class="sort-icon">⇅</span></th>
+                            <th data-sort="temp_amplitude_celsius">Амплитуда<br>температур <span class="sort-icon">⇅</span></th>
+                            <th data-sort="avg_temp_winter_celsius">Экстремумы<br>(зима/лето °C) <span class="sort-icon">⇅</span></th>
+                            <th data-sort="region_name">Регион <span class="sort-icon">⇅</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="arcticTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
 
 <div class="section-nav">
     <button type="button" class="nav-btn" onclick="switchTab('story')">← К истории</button>
@@ -1094,76 +1455,159 @@
 <!-- ВКЛАДКА 3: МЕТОДОЛОГИЯ -->
 <div id="tab-methodology" class="tab-content">
 
-<!-- PUBLIC BENEFIT -->
-<section class="public-benefit-section">
-    <h2>🎯 Для чего это нужно?</h2>
-    <p>ARCTIC INDEX — инструмент для адресной государственной поддержки арктических территорий</p>
+<section class="methodology-section" style="max-width: 1200px; margin: 0 auto; padding: 40px 20px;">
+    <div class="markdown-content" style="line-height: 1.8; color: #2c3e50;">
 
-    <div class="benefit-grid">
-        <div class="benefit-card">
-            <div class="benefit-icon">🏛️</div>
-            <div class="benefit-title">Для чиновников</div>
-            <div class="benefit-text">Объективные критерии распределения бюджета. Вместо "всем поровну" — адресная помощь тем, кто в ней нуждается.</div>
+        <h2 style="color: #2c3e50; margin-top: 40px;">Вступление</h2>
+        <p>Привет! Меня зовут Дарья и я рада представить вам дашборд "ARCTIC INDEX-Индекс развития арктических населённых пунктов" по теме "Арктические переселения".</p>
+
+        <p>На сегодняшний день существует 128 малых населённых пунктов Арктической зоны Российской Федерации и меня восхищает стойкость людей, живущих там в непростых климатических условиях.
+        И чтобы иметь возможность быстро оценить жизнь в подобных условиях, я решила создать композитный индекс оценки привлекательность арктических населённых пунктов: <strong>Northern Development Index (NDI)</strong>.</p>
+
+        <h2 style="color: #2c3e50; margin-top: 40px;">NDI</h2>
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #2196F3; margin: 20px 0;">
+            <code style="font-size: 16px; font-weight: bold;">NDI = 0.35×POAD + 0.20×Market + 0.15×Consumption + 0.15×Access + 0.10×Climate + 0.05×Mobility</code>
         </div>
-        <div class="benefit-card">
-            <div class="benefit-icon">📊</div>
-            <div class="benefit-title">Для аналитиков</div>
-            <div class="benefit-text">Открытые данные, воспроизводимая методология. SQL VIEW в PostgreSQL — копируй, проверяй, улучшай.</div>
-        </div>
-        <div class="benefit-card">
-            <div class="benefit-icon">🗳️</div>
-            <div class="benefit-title">Для граждан</div>
-            <div class="benefit-text">Прозрачность расходования средств. Каждый может проверить, почему его НП получил (или не получил) поддержку.</div>
-        </div>
-    </div>
-</section>
 
-<!-- METHODOLOGY -->
-<section class="methodology-section">
-    <h2>🔬 Методология расчёта NDI</h2>
+        <ol style="font-size: 16px;">
+            <li><strong>POAD. Качество жизни (35%)</strong> — медицина, образование, культура</li>
+            <li><strong>Market. Доступность рынков (20%)</strong> — экономическая интеграция</li>
+            <li><strong>Consumption. Покупательная способность (15%)</strong> — потребление vs прожиточный минимум</li>
+            <li><strong>Access. Транспортная доступность (15%)</strong> — близость к хабам</li>
+            <li><strong>Climate. Климат (10%)</strong> — затраты на отопление</li>
+            <li><strong>Mobility. Мобильность населения (5%)</strong> — экономическая активность</li>
+        </ol>
 
-    <p>Northern Development Index (NDI) — композитный индекс развития арктических населённых пунктов, рассчитываемый по формуле:</p>
+        <p style="font-style: italic; background: #e8f4f8; padding: 15px; border-radius: 6px;">Каждый НП получает оценку 0-10. Чем выше балл, тем устойчивее территория.</p>
 
-    <div class="methodology-formula">
-        NDI = 0.35×POAD + 0.20×Market + 0.15×Consumption + 0.15×Access + 0.10×Climate + 0.05×Mobility
-    </div>
+        <h2 style="color: #2c3e50; margin-top: 40px;">Откуда формируются показатели: Pipeline обработки данных</h2>
 
-    <h3>Компоненты индекса</h3>
-    <ul class="component-list">
-        <li><strong>POAD (35%)</strong> — Качество жизни. Источник: 93 показателя ПОРА (Росстат). Нормализация: min-max по 128 НП.</li>
-        <li><strong>Market Access (20%)</strong> — Доступность рынков. Источник: СберИндекс (2024). Пропуски заполнены региональными средними.</li>
-        <li><strong>Consumption (15%)</strong> — Потребление. Источник: СберИндекс (июль-декабрь 2024). Расчёт: welfare ratio (потребление / прожиточный минимум), clip at 2.0.</li>
-        <li><strong>Accessibility (15%)</strong> — Доступность до хабов. Источник: расстояние до 12 крупнейших городов. Нормализация: обратная дистанция.</li>
-        <li><strong>Climate (10%)</strong> — Климатическая нагрузка (HDD). Источник: Open-Meteo (2019-2024). Инверсия: холод = низкий балл.</li>
-        <li><strong>Mobility (5%)</strong> — Мобильность населения. Placeholder: 0.5 (нет данных).</li>
-    </ul>
+        <h3 style="color: #34495e; margin-top: 30px;">1. POAD (Качество жизни) — 35% веса в NDI</h3>
 
-    <h3>Источники данных</h3>
-    <p>• Росстат: 93 показателя ПОРА (качество жизни)<br>
-    • СберИндекс: market access, потребление (2024)<br>
-    • Open-Meteo: климатические данные (2019-2024)<br>
-    • Геокодирование: расстояния до хабов</p>
+        <p><strong>Расшифровка:</strong></p>
+        <ul>
+            <li><strong>P</strong>opulation (Население)</li>
+            <li><strong>O</strong>pportunity (Возможности)</li>
+            <li><strong>A</strong>ttractiveness (Привлекательность)</li>
+            <li><strong>D</strong>evelopment (Развитие)</li>
+        </ul>
 
-    <h3>Техническая реализация</h3>
-    <p>• PostgreSQL VIEW: <code>sberindex.vw_ndi_calculation</code><br>
-    • Python ETL: pandas, psycopg2<br>
-    • Дашборд: Plotly, HTML5, CSS3, JavaScript</p>
+        <p><strong>Первичные данные:</strong></p>
+        <ul>
+            <li><strong>Файл:</strong> <code>Data_SberIndex_POAD.xlsx</code> (187 КБ)</li>
+            <li><strong>Источник:</strong> SberIndex — данные организаторов хакатона</li>
+            <li><strong>Структура:</strong> 128 населённых пунктов × 93 показателя качества жизни</li>
+            <li><strong>Домены:</strong> Доходы, ЖКХ, Здравоохранение, Инфраструктура, Образование, Экология, Экономика, КМНС, Качество жизни</li>
+        </ul>
 
-    <h3>Открытый код</h3>
-    <p>Все скрипты, SQL запросы и методология доступны в репозитории. Воспроизведите расчёт самостоятельно:</p>
-    <div class="methodology-formula">
-        psql -f scripts/12_create_ndi_view.sql<br>
-        SELECT * FROM sberindex.vw_ndi_calculation ORDER BY ndi_10 DESC;
-    </div>
-</section>
+        <p><strong>Скрипты обработки:</strong></p>
+        <ol>
+            <li><code>scripts/01_load_data.py</code> — Загрузка Excel в PostgreSQL</li>
+            <li><code>scripts/02_correlation_analysis.py</code> — Корреляционный анализ + PCA</li>
+            <li><code>scripts/03_attractiveness_v1.py</code> — Расчёт индекса привлекательности</li>
+        </ol>
 
-<!-- CTA -->
-<section class="cta-section">
-    <h2 class="cta-title">Готовы использовать ARCTIC INDEX?</h2>
-    <p class="cta-subtitle">Присоединяйтесь к проекту открытых данных для Арктики</p>
-    <div class="cta-buttons">
-        <button type="button" class="cta-btn primary" onclick="alert('Контакт: arctic.index@example.com')">Связаться с нами</button>
-        <button type="button" class="cta-btn secondary" onclick="alert('GitHub: github.com/arctic-index')">Посмотреть код</button>
+        <p><strong>Топ-10 показателей в POAD (по корреляции с населением):</strong></p>
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
+            <thead style="background: #34495e; color: white;">
+                <tr>
+                    <th style="padding: 12px; border: 1px solid #ddd;">Ранг</th>
+                    <th style="padding: 12px; border: 1px solid #ddd;">Код</th>
+                    <th style="padding: 12px; border: 1px solid #ddd;">Показатель</th>
+                    <th style="padding: 12px; border: 1px solid #ddd;">Корреляция</th>
+                    <th style="padding: 12px; border: 1px solid #ddd;">Домен</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">1</td><td style="padding: 10px; border: 1px solid #ddd;">4.8</td><td style="padding: 10px; border: 1px solid #ddd;">Дома культуры и центры технического творчества</td><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">0.455</td><td style="padding: 10px; border: 1px solid #ddd;">ИНФРАСТРУКТУРА</td></tr>
+                <tr style="background: #f8f9fa;"><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">2</td><td style="padding: 10px; border: 1px solid #ddd;">4.6</td><td style="padding: 10px; border: 1px solid #ddd;">Библиотеки (на 1000 чел)</td><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">0.448</td><td style="padding: 10px; border: 1px solid #ddd;">ИНФРАСТРУКТУРА</td></tr>
+                <tr><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">3</td><td style="padding: 10px; border: 1px solid #ddd;">6.1</td><td style="padding: 10px; border: 1px solid #ddd;">Затраты на охрану окружающей среды</td><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">0.414</td><td style="padding: 10px; border: 1px solid #ddd;">ЭКОЛОГИЯ</td></tr>
+                <tr style="background: #f8f9fa;"><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">4</td><td style="padding: 10px; border: 1px solid #ddd;">4.12</td><td style="padding: 10px; border: 1px solid #ddd;">Доля доступного транспорта для маломобильных групп</td><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">0.366</td><td style="padding: 10px; border: 1px solid #ddd;">ИНФРАСТРУКТУРА</td></tr>
+                <tr><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">5</td><td style="padding: 10px; border: 1px solid #ddd;">3.11</td><td style="padding: 10px; border: 1px solid #ddd;">Смертность в трудоспособном возрасте</td><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">0.332</td><td style="padding: 10px; border: 1px solid #ddd;">ЗДРАВ</td></tr>
+            </tbody>
+        </table>
+
+        <h3 style="color: #34495e; margin-top: 30px;">2. Market Access (Доступность рынков) — 20% веса в NDI</h3>
+        <p><strong>Формула индекса:</strong></p>
+        <pre style="background: #f8f9fa; padding: 15px; border-radius: 6px; overflow-x: auto;"><code>market_access = Σ (население_соседних_МО / расстояние_до_них)</code></pre>
+
+        <h3 style="color: #34495e; margin-top: 30px;">3. Consumption (Покупательная способность) — 15% веса в NDI</h3>
+        <p><strong>Метрика в NDI:</strong></p>
+        <ul>
+            <li>Welfare ratio = <code>потребление / прожиточный_минимум_региона</code></li>
+            <li>Clipping: максимум 2.0 (норма)</li>
+            <li>Нормализация: 0-1 (0.5 = прожиточный минимум, 1.0 = 2× минимум)</li>
+        </ul>
+
+        <h3 style="color: #34495e; margin-top: 30px;">4. Accessibility (Транспортная доступность) — 15% веса в NDI</h3>
+        <p><strong>Формула:</strong></p>
+        <pre style="background: #f8f9fa; padding: 15px; border-radius: 6px; overflow-x: auto;"><code>Accessibility = 1 / (1 + distance_to_hub / 500)</code></pre>
+
+        <h3 style="color: #34495e; margin-top: 30px;">5. Climate (Климат — нагрузка HDD) — 10% веса в NDI</h3>
+        <p><strong>Метрика HDD (Heating Degree Days):</strong></p>
+        <pre style="background: #f8f9fa; padding: 15px; border-radius: 6px; overflow-x: auto;"><code>HDD_daily = max(0, 18°C - T_mean_daily)</code></pre>
+        <p>Базовая температура 18°C — стандарт СНиП</p>
+
+        <h3 style="color: #34495e; margin-top: 30px;">6. Mobility (Мобильность населения) — 5% веса в NDI</h3>
+        <p><strong>⚠️ Важно:</strong> При отсутствии данных для конкретного НП используется <strong>fallback значение 0.5</strong> (нейтральное).</p>
+
+        <h2 style="color: #2c3e50; margin-top: 40px;">Диаграмма Pipeline обработки данных NDI</h2>
+        <pre style="background: #2c3e50; color: #ecf0f1; padding: 20px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.6;">
+ПЕРВИЧНЫЕ ДАННЫЕ                     ОБРАБОТКА                           ИТОГОВЫЕ CSV
+================================================================================
+
+Data_SberIndex_POAD.xlsx   →  01_load_data.py          →  poad_attractiveness_v1.csv
+(187 KB, 128 НП × 93)         02_correlation_analysis.py   (128×4, вес 35%)
+                              03_attractiveness_v1.py
+
+sberindex.market_access    →  (готовая таблица БД)    →  market_access_municipality.csv
+(PostgreSQL, 2571 МО)                                     (2571×3, вес 20%)
+
+sberindex.consumption      →  (готовая таблица БД)    →  consumption_municipality_2024.csv
+(PostgreSQL, time-series)                                 (12578×4, вес 15%)
+
+НП координаты              →  06_distances.py          →  accessibility_scores.csv
+(latitude, longitude)         07_accessibility.py         (128×4, вес 15%)
+
+Open-Meteo API             →  09_fetch_climate_data.py →  climate_monthly_2023_2024.csv
+(2023-2024 температура)       10_load_climate_to_db.py    climate_yearly_hdd.csv
+                                                          (вес 10%)
+
+mobility_index.xlsx        →  etl_load_mobility_index.py → mobility_index_municipality.csv
+(МО, мобильность км)                                        (297×3, вес 5%)
+
+                                     ↓
+                         create_ndi_view.sql
+                      (PostgreSQL VIEW: формула NDI)
+                                     ↓
+                            ndi_scores.csv
+                          (128 НП, финальный NDI)
+        </pre>
+
+        <h2 style="color: #2c3e50; margin-top: 40px;">Таблица воспроизводимости данных</h2>
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
+            <thead style="background: #2196F3; color: white;">
+                <tr>
+                    <th style="padding: 12px; border: 1px solid #ddd;">Компонент</th>
+                    <th style="padding: 12px; border: 1px solid #ddd;">Первичные данные</th>
+                    <th style="padding: 12px; border: 1px solid #ddd;">Итоговый файл</th>
+                    <th style="padding: 12px; border: 1px solid #ddd;">Покрытие</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td style="padding: 10px; border: 1px solid #ddd;"><strong>POAD (35%)</strong></td><td style="padding: 10px; border: 1px solid #ddd;"><code>Data_SberIndex_POAD.xlsx</code></td><td style="padding: 10px; border: 1px solid #ddd;"><code>poad_attractiveness_v1.csv</code></td><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">128/128 (100%)</td></tr>
+                <tr style="background: #f8f9fa;"><td style="padding: 10px; border: 1px solid #ddd;"><strong>Market Access (20%)</strong></td><td style="padding: 10px; border: 1px solid #ddd;">PostgreSQL: <code>market_access_municipality</code></td><td style="padding: 10px; border: 1px solid #ddd;"><code>market_access_municipality.csv</code></td><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">128/128 (100%)</td></tr>
+                <tr><td style="padding: 10px; border: 1px solid #ddd;"><strong>Consumption (15%)</strong></td><td style="padding: 10px; border: 1px solid #ddd;">PostgreSQL: <code>consumption_municipality</code></td><td style="padding: 10px; border: 1px solid #ddd;"><code>consumption_municipality_2024.csv</code></td><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">128/128 (100%)</td></tr>
+                <tr style="background: #f8f9fa;"><td style="padding: 10px; border: 1px solid #ddd;"><strong>Accessibility (15%)</strong></td><td style="padding: 10px; border: 1px solid #ddd;">Координаты НП</td><td style="padding: 10px; border: 1px solid #ddd;"><code>accessibility_scores.csv</code></td><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">128/128 (100%)</td></tr>
+                <tr><td style="padding: 10px; border: 1px solid #ddd;"><strong>Climate (10%)</strong></td><td style="padding: 10px; border: 1px solid #ddd;">Open-Meteo API</td><td style="padding: 10px; border: 1px solid #ddd;"><code>climate_yearly_hdd.csv</code></td><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">128/128 (100%)</td></tr>
+                <tr style="background: #f8f9fa;"><td style="padding: 10px; border: 1px solid #ddd;"><strong>Mobility (5%)</strong></td><td style="padding: 10px; border: 1px solid #ddd;"><code>mobility_index.xlsx</code></td><td style="padding: 10px; border: 1px solid #ddd;"><code>mobility_index_municipality.csv</code></td><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">128/128 (100%)</td></tr>
+            </tbody>
+        </table>
+
+        <p style="font-style: italic; background: #fff3cd; padding: 15px; border-radius: 6px; border-left: 4px solid #ffc107; margin-top: 30px;">
+            <strong>Примечание:</strong> Все компоненты имеют полное покрытие 128 НП благодаря fallback стратегии (региональные средние для пропусков).
+        </p>
+
     </div>
 </section>
 
@@ -1268,20 +1712,12 @@ function applyFilters(category) {
         filtered = filtered.filter(d => getCategoryFromNDI(d.ndi_10) === category);
     }
 
-    // Фильтр по арктической зоне
-    const arcticFilter = document.getElementById('filter-arctic').value;
-    if (arcticFilter !== '') {
-        const isArcticBool = arcticFilter === 'true';
-        filtered = filtered.filter(d => d.is_arctic === isArcticBool);
-    }
-
     currentFilteredData = filtered;
 
     console.log(`🔍 Фильтрация: ${filtered.length} из ${allData.length} НП`);
     console.log(`   Регион: ${selectedRegions.length > 0 ? selectedRegions.join(', ') : 'все'}`);
     console.log(`   НП: ${selectedSettlements.length > 0 ? selectedSettlements.length + ' выбрано' : 'все'}`);
     console.log(`   Категория: ${category || 'все'}`);
-    console.log(`   Арктическая зона: ${arcticFilter === 'true' ? 'Да' : arcticFilter === 'false' ? 'Нет' : 'все'}`);
 
     // Пересчёт KPI карточек по категориям (ПОСЛЕ всех фильтров)
     const counts = {'Критический':0,'Низкий':0,'Средний':0,'Высокий':0};
@@ -1360,11 +1796,9 @@ function updateResetAllButton() {
     const hasRegionFilters = document.querySelectorAll('.region-checkbox:checked').length > 0;
     const hasSettlementFilters = document.querySelectorAll('.settlement-checkbox:checked').length > 0;
     const categorySelect = document.getElementById('filter-category');
-    const arcticSelect = document.getElementById('filter-arctic');
     const hasCategoryFilter = categorySelect && categorySelect.value !== '';
-    const hasArcticFilter = arcticSelect && arcticSelect.value !== '';
 
-    const hasAnyFilter = hasRegionFilters || hasSettlementFilters || hasCategoryFilter || hasArcticFilter;
+    const hasAnyFilter = hasRegionFilters || hasSettlementFilters || hasCategoryFilter;
 
     if (hasAnyFilter) {
         resetAllBtn.classList.add('active');
@@ -1504,7 +1938,7 @@ function renderTreemap(data) {
         autosize: true,
         annotations: [
             {
-                text: '<b>Легенда NDI:</b>    ' +
+                text: '<b>NDI:</b>    ' +
                       '<span style="color:rgb(165,0,38)">■</span> Критический (<3.0)    ' +
                       '<span style="color:rgb(244,109,67)">■</span> Низкий (3.0-4.5)    ' +
                       '<span style="color:rgb(254,224,139)">■</span> Средний (4.5-6.5)    ' +
@@ -1653,16 +2087,18 @@ if (resetAllBtn) {
 
         // Сброс single-select фильтров
         const categorySelect = document.getElementById('filter-category');
-        const arcticSelect = document.getElementById('filter-arctic');
         if (categorySelect) categorySelect.value = '';
-        if (arcticSelect) arcticSelect.value = '';
+
+        // Сброс активной категории
+        activeCategory = null;
+        document.querySelectorAll('.kpi-card').forEach(c => c.classList.remove('active'));
 
         // Обновление данных
         updateSettlementOptions();
-        applyFilters(activeCategory);
+        applyFilters(null);
         updateResetAllButton();
 
-        console.log('Все фильтры сброшены');
+        console.log('✅ Все фильтры первого уровня сброшены');
     });
 }
 
@@ -1688,15 +2124,9 @@ if (categorySelect) {
     });
 }
 
-// Arctic zone filter event listener
-const arcticSelect = document.getElementById('filter-arctic');
-if (arcticSelect) {
-    arcticSelect.addEventListener('change', function() {
-        applyFilters(activeCategory);
-    });
-
-    // Обработчик кнопки "Назад к регионам"
-    const treemapBackBtn = document.getElementById('treemap-back-btn');
+// Обработчик кнопки "Назад к регионам"
+const treemapBackBtn = document.getElementById('treemap-back-btn');
+if (treemapBackBtn) {
     treemapBackBtn.addEventListener('click', function() {
         currentDrillLevel = 'regions';
         currentRegion = null;
@@ -1724,75 +2154,6 @@ applyFilters();
 updateResetAllButton();
 
 // === CRITICAL SETTLEMENTS WIDGET ===
-
-// Функция генерации таблицы критических НП
-function renderCriticalSettlements() {
-    // Фильтруем НП с NDI < 3.0
-    const critical = arcticData.filter(d => d.ndi_10 < 3.0)
-        .sort((a, b) => a.ndi_10 - b.ndi_10);
-
-    const tbody = document.getElementById('criticalTableBody');
-    tbody.innerHTML = '';
-
-    critical.forEach((d, i) => {
-        const tr = document.createElement('tr');
-        tr.onclick = () => highlightSettlement(d.settlement_name);
-        tr.innerHTML = `
-            <td>${i + 1}</td>
-            <td><strong>${d.settlement_name}</strong></td>
-            <td><strong style="color:#e74c3c">${d.ndi_10.toFixed(2)}</strong></td>
-            <td>${d.region_name}</td>
-            <td><span class="badge badge-risk">AT RISK</span></td>
-        `;
-        tbody.appendChild(tr);
-    });
-
-    // Treemap для критических НП
-    renderCriticalTreemap(critical);
-}
-
-// Функция визуализации treemap критических НП
-function renderCriticalTreemap(data) {
-    const labels = data.map(d => d.settlement_name);
-    const parents = data.map(d => d.region_name);
-    const values = data.map(d => 1); // Равные размеры
-    const colors = data.map(d => d.ndi_10);
-
-    const trace = {
-        type: 'treemap',
-        labels: labels,
-        parents: parents,
-        values: values,
-        marker: {
-            colors: colors,
-            colorscale: [
-                [0, 'rgb(165,0,38)'],
-                [0.5, 'rgb(244,109,67)'],
-                [1, 'rgb(254,224,139)']
-            ],
-            showscale: false
-        },
-        textposition: 'middle center',
-        hovertemplate: '<b>%{label}</b><br>NDI: %{color:.2f}<extra></extra>'
-    };
-
-    const layout = {
-        margin: { t: 0, l: 0, r: 0, b: 0 },
-        autosize: true
-    };
-
-    Plotly.newPlot('critical-treemap', [trace], layout, { responsive: true });
-}
-
-// Функция подсветки выбранного НП (интеграция с существующими графиками)
-function highlightSettlement(name) {
-    console.log('Выбран НП:', name);
-    // TODO: Waterfall/Radar графики временно удалены, будут восстановлены позже
-    alert('Выбран НП: ' + name + '\n\nДетальные графики будут добавлены позже.');
-}
-
-// Вызвать при загрузке страницы
-renderCriticalSettlements();
 
 </script>
 

@@ -93,7 +93,6 @@ territory_id | year_month | category | amount | ...
 data/
 ├── settlements_raw.csv              # Справочник НП (31 KB)
 ├── indicators_raw.csv               # POAD показатели (2.5 MB)
-├── ndi_data.json                    # Финальные NDI данные (75 KB)
 ├── ndi_final.csv                    # NDI в CSV (22 KB)
 ├── attractiveness_v1.csv            # POAD scores (18 KB)
 ├── attractiveness_v2.csv            # С учётом доступности (29 KB)
@@ -101,6 +100,9 @@ data/
 ├── clusters.csv                     # Кластеры (16 KB)
 ├── distance_matrix.npy              # Матрица расстояний (131 KB)
 └── ...
+
+dashboard/
+└── ndi_data.json                    # Финальные NDI данные для дашборда (123 KB)
 ```
 
 ⚠️ Эти файлы также **исключены из git** (см. `.gitignore`) и генерируются автоматически.
