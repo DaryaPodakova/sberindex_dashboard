@@ -9,7 +9,8 @@ _(лучше увеличивать скорость воспроизведен�
 
 ### Вариант А: Просмотр dashboard (без установки)
 
-1. Откройте файл [dashboard/dashboard.html](dashboard/dashboard.html) в браузере
+1. Откройте файл [dashboard/dashboard.html]([dashboard/dashboard.html](https://daryapodakova.github.io/sberindex_dashboard/
+)) в браузере
 2. Все данные уже встроены, интернет нужен только для загрузки Plotly CDN
 
 **Готово!** Dashboard работает локально.
