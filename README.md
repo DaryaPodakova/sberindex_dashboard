@@ -5,6 +5,7 @@
 [Ссылка для знакомства с дашбордом (6 минут)](https://drive.google.com/file/d/1V10jB4SxiDTFYGmxjNtIKSx9jdoNNoTE/view?usp=sharing)  
 _(лучше увеличивать скорость воспроизведения)_
 
+
 ## 🚀 Быстрый старт
 
 ### Вариант А: Просмотр dashboard (без установки)
@@ -12,7 +13,8 @@ _(лучше увеличивать скорость воспроизведен�
 1. Откройте дашборд в браузере:  
    https://daryapodakova.github.io/sberindex_dashboard/dashboard/dashboard.html
 2. Все данные уже встроены; интернет нужен только для загрузки Plotly CDN.
-
+![Sberbank Dashboard 1](sberbank1.png)
+![Sberbank Dashboard 2](sberbank2.png)
 
 **Готово!** Dashboard работает локально.
 
